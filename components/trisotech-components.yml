@@ -1,0 +1,69 @@
+generated: '2026-09-02'
+method: searched
+source: https://cloud.trisotech.com/help/service-library/endpoints.html
+name: Trisotech hosted and embeddable surfaces
+summary: >-
+  Trisotech ships no JavaScript element library, no web components and no npm-distributed
+  embed. What it does ship are HOSTED, generated UI surfaces: a service can render itself as
+  an HTML form, a Digital Application assembles services and forms into an end-user app, and
+  Kommunicator publishes a model as a shareable interactive view. These are prebuilt surfaces
+  a customer links to or frames, not components a developer composes in their own build.
+distribution: hosted-surfaces-only
+loader_libraries: []
+loader_libraries_note: >-
+  No CDN loader script, no npm package and no unpkg/jsDelivr distribution exists — see
+  packages/trisotech-packages.yml, where every public registry returned zero first-party
+  results.
+families:
+  - name: Service endpoints
+    kind: hosted
+    components:
+      - name: Form Endpoint
+        url: https://cloud.trisotech.com/help/service-library/form-endpoint.html
+        description: >-
+          Renders an HTML form that executes the service. Generated from the service's own
+          input definition.
+      - name: Service Execution HTML template
+        url: https://cloud.trisotech.com/help/service-library/service-execution-rest-api-endpoint.html
+        description: >-
+          A GET with Accept text/html returns an unstyled multipart/form-data form whose
+          action posts back to the execution endpoint — the raw embeddable form for a service.
+        caveat: >-
+          "Note that not all services can be invoked using an HTML form."
+      - name: Container
+        url: https://cloud.trisotech.com/help/service-library/container.html
+        description: >-
+          Pulls a container image that runs the service standalone. A deployment artifact
+          rather than a UI component, listed here because it is one of the Service Library's
+          published endpoint types.
+  - name: End-user applications
+    kind: hosted
+    components:
+      - name: Digital Application
+        url: https://cloud.trisotech.com/help/digital-application/digital-application.html
+        description: >-
+          A generated end-user application assembling a set of services, forms, tasks and tags.
+      - name: User Task UI
+        url: https://cloud.trisotech.com/help/workflow-modeler/user-task-ui.html
+        description: The task-completion interface for human steps in a running workflow or case.
+  - name: Model sharing and review
+    kind: hosted
+    components:
+      - name: Kommunicator
+        url: https://cloud.trisotech.com/help/kommunicator/kommunicator.html
+        description: >-
+          Publishes a model as an interactive, navigable view for non-modellers, with a model
+          explorer, side bar, issue editor and share controls.
+finding: >-
+  For an integrator, the practical consequence is that Trisotech's front-end surfaces are
+  consumed by URL — link or iframe — and cannot be composed into a host application's own
+  component tree. Custom UI must be built against the REST endpoints.
+evidence:
+  - url: https://cloud.trisotech.com/help/service-library/endpoints.html
+    status: 200
+  - url: https://cloud.trisotech.com/help/service-library/form-endpoint.html
+    status: 200
+  - url: https://cloud.trisotech.com/help/digital-application/digital-application.html
+    status: 200
+  - url: https://cloud.trisotech.com/help/kommunicator/kommunicator.html
+    status: 200

@@ -1,0 +1,143 @@
+generated: '2026-09-02'
+method: probed
+source: https://cloud.trisotech.com/docs/messages-documentation.json
+name: Trisotech Digital Enterprise Suite Asynchronous Events
+summary: >-
+  Trisotech does not publish an AsyncAPI document. It does publish a machine-readable
+  event/message catalog (23 topics, 104 message types, each with typed fields) served
+  anonymously from its own cloud instance, plus a documented Event Emitter subscription
+  model. This artifact records that event surface; the catalog itself is saved verbatim
+  alongside it. No AsyncAPI has been authored on the provider's behalf.
+asyncapi_document: null
+asyncapi_note: >-
+  No AsyncAPI 2.x/3.x document was found on any Trisotech host. Probed
+  https://cloud.trisotech.com/asyncapi.yaml (404) and the docs nav for
+  cloud.trisotech.com/help (no AsyncAPI page). NOT fabricated.
+catalog:
+  file: asyncapi/trisotech-events-catalog.json
+  url: https://cloud.trisotech.com/docs/messages-documentation.json
+  http_status: 200
+  content_type: application/json
+  bytes: 92204
+  fetched: '2026-09-02'
+  discovery: >-
+    The catalog URL is not linked from the docs. It was found by reading the client script
+    behind the human events documentation page at
+    https://cloud.trisotech.com/publicapi/doc-events (script.js issues
+    $.getJSON("/docs/messages-documentation.json")).
+  version_seen: 13.0.14
+event_format:
+  standard: CloudEvents
+  version: 1.0.1
+  encoding: JSON
+  docs: https://cloud.trisotech.com/help/des/system-integration/asynchronous-events.html
+  attributes:
+    - name: id
+      required: true
+      note: unique event identifier
+    - name: time
+      required: true
+      note: RFC 3339 encoded event time
+    - name: source
+      required: true
+      note: defaults to the instance name (instance.trisotech.com); overridable per emitter
+    - name: type
+      required: true
+      note: the message type (one of the 104 catalogued names)
+    - name: data
+      required: false
+      note: JSON payload; each message type defines its own field set
+    - name: specversion
+      required: true
+      note: constant, currently 1.0.1
+    - name: subject
+      required: false
+    - name: Ip
+      required: false
+      note: IP of the user who generated the event, when user-generated
+    - name: user
+      required: false
+      note: email of the user who generated the event, when user-generated
+    - name: app
+      required: false
+      note: OAuth client identifier, when generated through a client app
+subscription:
+  model: Event Emitters
+  docs: https://cloud.trisotech.com/help/des/settings/emitters.html
+  managed_via_api: true
+  api_group: EventEmitters
+  operations:
+    - emittersGet
+    - emittersDefinitionsGet
+    - emittersDefinitionsPost
+    - emittersDefinitionsIdGet
+    - emittersDefinitionsIdPut
+    - emittersDefinitionsIdDelete
+    - emittersDefinitionsIdEnablePost
+    - emittersDefinitionsIdDisablePost
+    - emittersAuditIdGet
+  definition_fields:
+    - name: id
+      note: unique emitter identifier; auto-generated for user emitters
+    - name: type
+      note: the integration strategy / target system the events are pushed to
+    - name: filter
+      note: a FEEL expression evaluated against the message data; emit when true
+    - name: topics
+      note: array of arrays; hierarchical topic/subtopic subscription, e.g. [service, production, finance]
+    - name: messages
+      note: array of allowed message type names; all types when omitted
+    - name: owner
+      note: user owning a user emitter; omitted for system emitters
+    - name: identityRef
+      note: optional identity used to publish on the emitter
+  scopes_required:
+    - emitter_r
+    - emitter_w
+  audit: >-
+    Emitter audit logs are downloadable per emitter for a start/end date range
+    (GET /emitters/audit/{id}).
+publish_api:
+  operation: eventPost
+  path: POST /event
+  note: >-
+    The Public API also lets an authorized caller publish a message onto the event bus.
+topics:
+  count: 23
+  message_count: 104
+  security_note: >-
+    Every topic carries its own security constraint governing which users may receive its
+    messages; most administrative topics are 'Administrator only'.
+  list:
+    - {topic: aiagent, messages: 2, security: Administrator only}
+    - {topic: asset, messages: 2, security: Administrator or a user with access to the place holding the asset}
+    - {topic: change-request, messages: 5, security: Administrator only}
+    - {topic: client-app, messages: 3, security: Administrator only}
+    - {topic: connector, messages: 3, security: Administrator or a user with write access to the execution environment}
+    - {topic: containers, messages: 2, security: Administrator or a user with access to the emitting environment}
+    - {topic: datastore, messages: 5, security: Administrator or a user with access to the data store}
+    - {topic: email, messages: 1, security: Administrator only}
+    - {topic: environment, messages: 8, security: Administrator or a user with access to the emitting environment}
+    - {topic: graph, messages: 1, security: Administrator or a user with access to the indexed model}
+    - {topic: group, messages: 6, security: Administrator only}
+    - {topic: identity, messages: 3, security: Administrator or identity owner}
+    - {topic: integration, messages: 4, security: Administrator only}
+    - {topic: issue, messages: 9, security: Administrator or a user with access to the place holding the issue}
+    - {topic: preference, messages: 1, security: Administrator only}
+    - {topic: repository, messages: 19, security: Administrator or a user with access to the emitting place}
+    - {topic: security, messages: 6, security: Administrator only}
+    - {topic: service, messages: 10, security: Administrator or a user with write access to the execution environment}
+    - {topic: task, messages: 2, security: Administrator or a user with access to the emitting task}
+    - {topic: transformation, messages: 2, security: Administrator or the user who started the service}
+    - {topic: user, messages: 5, security: Administrator only}
+    - {topic: user-event, messages: 1, security: Administrator or a user with access to the emitting environment}
+    - {topic: websession, messages: 4, security: Administrator or the user who initiated the websocket session}
+evidence:
+  - url: https://cloud.trisotech.com/docs/messages-documentation.json
+    status: 200
+  - url: https://cloud.trisotech.com/publicapi/doc-events
+    status: 200
+  - url: https://cloud.trisotech.com/help/des/system-integration/asynchronous-events.html
+    status: 200
+  - url: https://cloud.trisotech.com/help/des/settings/emitters.html
+    status: 200

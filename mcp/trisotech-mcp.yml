@@ -1,0 +1,107 @@
+generated: '2026-09-02'
+method: searched
+source: https://cloud.trisotech.com/help/service-library/mcp.html
+name: Trisotech Service Library MCP Server
+summary: >-
+  Trisotech ships a real, first-party MCP server, but it is generated per customer rather
+  than published as one vendor endpoint. Every service in a customer's Service Library —
+  each DMN decision service, straight-through BPMN workflow, or workflow with message resume
+  points — can be exposed individually through MCP, and a whole execution environment can be
+  exposed at once. Trisotech's own words: "Trisotech provides a unique client URL for each
+  supported Service in the Service Library, which users can then register with the LLM of
+  their choice." The provider marks the feature "currently incubating".
+status: published
+first_party: true
+maturity: incubating
+maturity_source: >-
+  "This feature is currently incubating" — the provider's own banner on the MCP help page.
+deployment:
+  mode: remote
+  endpoint: null
+  endpoint_note: >-
+    NO vendor-wide MCP endpoint exists and none has been invented here. The URL is minted by
+    the customer's own instance, per service or per environment, and is only visible to a
+    signed-in user of that instance. The shape is therefore
+    <customer-instance>.trisotech.com/... — recorded as a description, not as a callable URL.
+  install: null
+  package: null
+  auth: unknown
+  auth_note: >-
+    The MCP help page does not state the authentication scheme for the generated client URL.
+    Every other Trisotech API surface is OAuth 2 bearer, and the MCP endpoint exposes
+    execution capability gated in the Public API by the bpmn_x / cmmn_x / dmn_x grants, so
+    an unauthenticated endpoint would be surprising — but the docs do not say, so this is
+    recorded as unknown rather than guessed.
+  verified: searched
+transports:
+  - name: Streamable HTTP
+    recommended: true
+  - name: Server-Sent Events (SSE)
+    recommended: false
+    note: >-
+      "The MCP standard deprecated the Server-Sent Events (SSE) protocol and recommended
+      using Streamable HTTP." Trisotech still offers it.
+scopes:
+  granularity:
+    - per-service
+    - per-environment
+  per_service: >-
+    "Each service can be exposed individually through MCP. An AI agent can then interact with
+    that service to invoke it and gather the results."
+  per_environment: >-
+    "All services of the environment can be exposed through MCP."
+supported_service_types:
+  types:
+    - All decision services (DMN)
+    - Straight-through workflow services (BPMN)
+    - Workflow services that interact using message resume points
+  not_supported_note: >-
+    The provider lists what is supported today; workflow services requiring richer human
+    interaction are not in that list.
+tools:
+  enumerated: false
+  count: null
+  note: >-
+    THE TOOL LIST IS TENANT-DEFINED. A Trisotech MCP server exposes the customer's own
+    published services as tools, so there is no fixed, vendor-published tool set to capture
+    and none has been derived. The provider's guidance — "Add good model descriptions. These
+    are exposed to the AI agent to guide it on how to use the service" — confirms that tool
+    names and descriptions come from the customer's models, not from Trisotech.
+  live_introspection: not-attempted
+  live_introspection_reason: >-
+    No anonymous MCP endpoint exists to POST tools/list to. Probing a guessed URL was
+    deliberately not done.
+observability:
+  note: >-
+    MCP activity is observable through the event catalog: the `aiagent` topic publishes
+    AIAgentToolInvoke (toolInvoker, toolName, toolArguments, toolResults, product, usecase)
+    and AIAgentChat. That is an unusually good agent-audit surface.
+  ref: asyncapi/trisotech-events-catalog.json
+client_guidance_published:
+  clients:
+    - client: Microsoft Copilot Studio
+      note: >-
+        Trisotech points at Copilot Studio's own docs and warns that Copilot Studio asks you
+        to split the URL into a Swagger YAML definition of the endpoint.
+    - client: OpenAI
+    - client: Anthropic
+  caveat: >-
+    "Different AI agent provider may not have the exact same interaction capabilities and may
+    interact with the service in an inconsistent or incorrect way." — the provider's own
+    warning.
+tool_crosswalk: null
+tool_crosswalk_reason: >-
+  A crosswalk binds MCP tools to backing OpenAPI operationIds. Here the MCP tools ARE
+  customer services, not Public API operations, and the Public API's 129 operations are a
+  different surface (repository, admin, deployment) with no MCP projection at all. There is
+  no stable mapping to record, so none was authored.
+evidence:
+  - url: https://cloud.trisotech.com/help/service-library/mcp.html
+    status: 200
+  - url: https://cloud.trisotech.com/help/service-library/endpoints.html
+    status: 200
+  - url: https://www.trisotech.com/model-context-protocol-mcp/
+    status: 200
+  - url: https://cloud.trisotech.com/docs/messages-documentation.json
+    status: 200
+    note: aiagent topic — AIAgentToolInvoke / AIAgentChat message definitions

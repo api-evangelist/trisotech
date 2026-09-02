@@ -1,18 +1,117 @@
 aid: trisotech
 name: Trisotech
-description: 'Trisotech is a company surfaced via the API Evangelist harvest backlog (source: openehr-coalition)
-  and added to the network as a stub for full-pipeline profiling.'
+description: >-
+  Trisotech is a Montreal, Canada software company, founded in 1996, that builds the Digital
+  Enterprise Suite — a standards-anchored low-code platform for modelling and automating
+  business processes, cases and decisions. Its modelers implement the OMG trio of BPMN 2.0,
+  CMMN 1.1 and DMN with FEEL, and its Digital Automation Suite executes those same models as
+  live services. Trisotech's founder chairs OMG work on those standards, and the product line
+  reflects it: services publish themselves as OpenAPI, as containers, as CDS Hooks discovery
+  endpoints and SMART on FHIR applications for healthcare, and as Model Context Protocol
+  servers for AI agents. The platform is sold into healthcare, finance and the public sector,
+  and the machine-readable surface is a 129-operation OAuth 2 Public API for repository,
+  deployment, identity and administration work, plus a per-service Automation API and a SPARQL
+  endpoint over the Digital Enterprise Graph.
+image: https://www.trisotech.com/wp-content/themes/trisotech/images/logo-trisotech-brand.png
 url: https://raw.githubusercontent.com/api-evangelist/trisotech/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:openehr-coalition
-x-tier: stub
-x-tier-reason: harvest
 specificationVersion: '0.20'
 created: '2026-09-02'
 modified: '2026-09-02'
 tags:
-- Company
-apis: []
+- Business Process Management
+- Decision Management
+- Workflow Automation
+- Low Code
+- BPMN
+- DMN
+- CMMN
+- Healthcare
+- FHIR
+- Clinical Decision Support
+- Standards
+- AI Agents
+- Model Context Protocol
+- Enterprise Architecture
+apis:
+- aid: trisotech:public-api
+  name: Trisotech Digital Enterprise Suite Public API
+  description: >-
+    The Public API of the Digital Enterprise Suite — 129 operations across 30 resource groups
+    covering modeling places and their content, model promotion change requests, execution
+    environments and deployments of BPMN/CMMN/DMN services, data stores, event emitters,
+    issues, identities, groups, users, user-task search, test data and AI agents. Protected
+    with OAuth 2; every token carries the grants of the Client App that issued it. The API is
+    unversioned in its path and served from the customer's own instance host.
+  humanURL: https://cloud.trisotech.com/help/des/system-integration/rest-api-documentation.html
+  baseURL: https://cloud.trisotech.com/publicapi
+  tags:
+  - Business Process Management
+  - Decision Management
+  - Workflow Automation
+  - Administration
+  properties:
+  - type: Documentation
+    url: https://cloud.trisotech.com/help/des/system-integration/rest-api.html
+  - type: APIReference
+    url: https://cloud.trisotech.com/help/des/system-integration/rest-api-documentation.html
+  - type: Authentication
+    url: authentication/trisotech-authentication.yml
+  - type: OAuthScopes
+    url: scopes/trisotech-scopes.yml
+  - type: ErrorCatalog
+    url: errors/trisotech-problem-types.yml
+  - type: Conventions
+    url: conventions/trisotech-conventions.yml
+  - type: RateLimits
+    url: rate-limits/trisotech-rate-limits.yml
+  - type: DataModel
+    url: data-model/trisotech-data-model.yml
+  - type: Webhooks
+    url: asyncapi/trisotech-events.yml
+- aid: trisotech:automation-api
+  name: Trisotech Automation (Service Execution) API
+  description: >-
+    Every service published to the Trisotech Service Library gets its own REST endpoint and
+    its own generated OpenAPI document, built from that service's inputs, outputs and
+    characteristics. The endpoint executes a DMN decision service or starts a BPMN process or
+    CMMN case instance, and sibling endpoints list and inspect running instances, read and
+    write instance data, navigate a case file, reassign user-task resume points, trigger
+    instances by message, and search user tasks. A GET returns an input template instead of
+    executing, in JSON, XML or HTML form.
+  humanURL: https://cloud.trisotech.com/help/service-library/service-rest-api-endpoint.html
+  baseURL: https://cloud.trisotech.com/execution
+  tags:
+  - Workflow Automation
+  - Decision Management
+  - Case Management
+  properties:
+  - type: Documentation
+    url: https://cloud.trisotech.com/help/service-library/endpoints.html
+  - type: APIReference
+    url: https://cloud.trisotech.com/help/service-library/service-execution-rest-api-endpoint.html
+  - type: Sandbox
+    url: sandbox/trisotech-sandbox.yml
+  - type: MCPServer
+    url: mcp/trisotech-mcp.yml
+- aid: trisotech:graph-sparql
+  name: Trisotech Digital Enterprise Graph SPARQL API
+  description: >-
+    A read-only SPARQL 1.1 endpoint over the Digital Enterprise Graph, the RDF projection of
+    every model in a modeling place. One graph exists per place, named
+    http://trisotech.com/graph/1.0/graph#<place id>. Requires a licensed Digital Modeling
+    Suite with the Digital Enterprise Graph subscription and a Client App holding the graph_r
+    and repo_r grants.
+  humanURL: https://cloud.trisotech.com/help/digital-modeling-suite/sparql.html
+  baseURL: https://cloud.trisotech.com/ds/query
+  tags:
+  - Knowledge Graph
+  - SPARQL
+  - Enterprise Architecture
+  properties:
+  - type: Documentation
+    url: https://cloud.trisotech.com/help/digital-modeling-suite/sparql.html
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -20,4 +119,81 @@ maintainers:
   email: info@apis.io
 common:
 - type: Website
-  url: https://www.trisotech.com/healthcare/
+  url: https://www.trisotech.com/
+- type: DeveloperPortal
+  url: https://cloud.trisotech.com/help/des/system-integration/system-integration.html
+- type: Documentation
+  url: https://cloud.trisotech.com/help/
+- type: APIReference
+  url: https://cloud.trisotech.com/help/des/system-integration/rest-api-documentation.html
+- type: GettingStarted
+  url: https://cloud.trisotech.com/help/des/system-integration/rest-api.html
+- type: Support
+  url: https://www.trisotech.com/contact-us/
+- type: Blog
+  url: https://www.trisotech.com/blog/
+- type: BlogRSS
+  url: https://www.trisotech.com/feed/
+- type: GitHubOrganization
+  url: https://github.com/Trisotech
+- type: Pricing
+  url: https://www.trisotech.com/pricing/
+- type: SignUp
+  url: https://www.trisotech.com/trials/
+- type: TermsOfService
+  url: https://www.trisotech.com/terms-of-service/
+- type: PrivacyPolicy
+  url: https://www.trisotech.com/privacy-statement/
+- type: StatusPage
+  url: https://www.trisotech.com/status/
+- type: ChangeLog
+  url: https://www.trisotech.com/release-notes/
+- type: Security
+  url: https://www.trisotech.com/security/
+- type: Compliance
+  url: conformance/trisotech-conformance.yml
+- type: TrustCenter
+  url: security/trisotech-trust-center.yml
+- type: VulnerabilityDisclosure
+  url: security/trisotech-vulnerability-disclosure.yml
+- type: DomainSecurity
+  url: security/trisotech-domain-security.yml
+- type: Conformance
+  url: conformance/trisotech-conformance.yml
+- type: Lifecycle
+  url: lifecycle/trisotech-lifecycle.yml
+- type: ChangeLog
+  url: changelog/trisotech-changelog.yml
+- type: Plans
+  url: plans/trisotech-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/trisotech-rate-limits.yml
+- type: Authentication
+  url: authentication/trisotech-authentication.yml
+- type: OAuthScopes
+  url: scopes/trisotech-scopes.yml
+- type: ErrorCatalog
+  url: errors/trisotech-problem-types.yml
+- type: Conventions
+  url: conventions/trisotech-conventions.yml
+- type: Sandbox
+  url: sandbox/trisotech-sandbox.yml
+- type: Packages
+  url: packages/trisotech-packages.yml
+- type: MCPServer
+  url: mcp/trisotech-mcp.yml
+- type: Webhooks
+  url: asyncapi/trisotech-events.yml
+- type: Components
+  url: components/trisotech-components.yml
+- type: DataModel
+  url: data-model/trisotech-data-model.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: LLMsTxt
+  url: llms/trisotech-llms.txt
+x-enrichment:
+  date: '2026-09-02'
+  status: enriched
+  artifacts_added: 25
+  pass: local-v1

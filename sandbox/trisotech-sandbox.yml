@@ -1,0 +1,86 @@
+generated: '2026-09-02'
+method: searched
+source: https://cloud.trisotech.com/help/service-library/test-endpoint.html
+name: Trisotech testing, trial and simulation surfaces
+summary: >-
+  Trisotech has no sandbox in the payments sense — no test-mode key prefix, no test/live
+  environment split at the credential level, and no published test fixtures. What it does
+  have is a genuinely strong pre-production story built into the modelling tools: a Test
+  Endpoint that runs DMN TCK test cases against a published service, an input-template GET
+  on every service execution endpoint, animators and simulators inside each modeler, and a
+  Test Data API for managing named test data sets.
+test_live_split:
+  key_prefixes: false
+  separate_environments: true
+  note: >-
+    Isolation is by execution ENVIRONMENT, not by credential mode. Services are deployed to
+    named environments (POST /deployments/{bpmn|cmmn|dmn}/{environment}/...) and promoted
+    between them via change requests, so a customer builds their own test/production split.
+    The same OAuth token works against every environment its grants allow.
+surfaces:
+  - name: Test Endpoint
+    type: test-runner
+    url: https://cloud.trisotech.com/help/service-library/test-endpoint.html
+    content_type: application/xml
+    methods: [POST]
+    format: DMN TCK
+    format_schema: https://raw.githubusercontent.com/dmn-tck/tck/master/TestCases/testCases.xsd
+    detail: >-
+      Executes test cases either defined in the service at modelling time or posted in the
+      body as raw XML. Returns a <testResult> document with one <testCase passed="true|false"/>
+      per case. If no XML is posted, the model's own test cases run.
+    runner_reference: https://github.com/dmn-tck/tck/tree/master/runners/dmn-tck-runner-trisotech
+  - name: Service Execution input template
+    type: dry-run-adjacent
+    url: https://cloud.trisotech.com/help/service-library/service-execution-rest-api-endpoint.html
+    methods: [GET]
+    detail: >-
+      A GET on a service execution endpoint returns a template of the expected input rather
+      than executing it — a JSON skeleton with the service's input requirements, an XML
+      context document, or an unstyled HTML form, chosen by the Accept header. This lets a
+      caller discover the request shape without side effects.
+  - name: Test Data API
+    type: fixture-management
+    operations:
+      - testdataGet
+      - testdataTypeGet
+      - testdataTypeDelete
+      - testdataTypeNameGet
+      - testdataTypeNamePost
+      - testdataTypeNameDelete
+    detail: >-
+      Named test data sets, addressed by type and name, managed over the Public API. The
+      fixtures are the customer's own; Trisotech publishes no seeded example data.
+  - name: Modeler animators and simulators
+    type: local-simulation
+    detail: >-
+      Decision Animator, Process Animator, Case Animator and BPMN simulation run a model
+      interactively inside the modeler before anything is deployed.
+    urls:
+      - https://cloud.trisotech.com/help/decision-modeler/decision-animator.html
+      - https://cloud.trisotech.com/help/workflow-modeler/simulation.html
+  - name: Test cases in models
+    type: authored-fixtures
+    urls:
+      - https://cloud.trisotech.com/help/decision-modeler/test-cases.html
+      - https://cloud.trisotech.com/help/workflow-modeler/test-cases.html
+trial:
+  self_serve: false
+  url: https://www.trisotech.com/trials/
+  http_status: 200
+  onboarding: https://www.trisotech.com/trial-onboarding/
+  note: >-
+    A free trial is offered through a request form and a guided onboarding page, not an
+    instant signup. No trial length or entitlement is published.
+published_test_values: []
+published_test_values_note: >-
+  NONE. Trisotech publishes no test cards, test identifiers, magic values or hosted test
+  tokens, because it is not a payments or communications provider — the fixtures are the
+  customer's own models and data. Nothing has been invented to fill this field.
+evidence:
+  - url: https://cloud.trisotech.com/help/service-library/test-endpoint.html
+    status: 200
+  - url: https://cloud.trisotech.com/help/service-library/service-execution-rest-api-endpoint.html
+    status: 200
+  - url: https://www.trisotech.com/trials/
+    status: 200

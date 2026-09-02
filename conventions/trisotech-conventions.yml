@@ -1,0 +1,185 @@
+generated: '2026-09-02'
+method: searched
+source: https://cloud.trisotech.com/help/des/system-integration/rest-api-documentation.html
+name: Trisotech Public API Conventions
+summary: >-
+  Cross-cutting runtime semantics for the Trisotech Digital Enterprise Suite Public API,
+  read from the provider's published API reference and System Integration docs and confirmed
+  against live unauthenticated responses. The API is a conventional bearer-token JSON REST
+  surface with page/pageSize pagination and a proprietary error envelope. It publishes no
+  idempotency mechanism and no rate-limit signalling.
+auth:
+  style: OAuth 2 bearer token
+  header: 'Authorization: Bearer <token>'
+  detail_ref: authentication/trisotech-authentication.yml
+  scopes_ref: scopes/trisotech-scopes.yml
+content_negotiation:
+  request_header: Accept
+  default_without_accept: application/xml
+  default_note: >-
+    "By default, if the Accept header is not defined, the API produces XML results for
+    legacy support. This format is deprecated." Always send Accept: application/json.
+  json: application/json
+  service_execution_variants:
+    - application/json
+    - application/json+metadata
+    - application/json+result
+    - application/xml
+    - text/html
+    - application/pdf
+  source: https://cloud.trisotech.com/help/service-library/service-execution-rest-api-endpoint.html
+response_envelope:
+  success: '{"data": ...}'
+  success_note: >-
+    Successful responses wrap the payload in a top-level `data` key — confirmed live on
+    GET /publicapi/login ({"data":{"groups":[]}}) and shown in the SPARQL doc''s example of
+    GET /publicapi/repository.
+  error: '{"error":[{"code":"...","systemMessage":"...","userMessage":"..."}]}'
+  error_ref: errors/trisotech-problem-types.yml
+pagination:
+  style: page-number
+  params:
+    - name: page
+      description: The page index of the result to be returned (starts at 0).
+    - name: pageSize
+      description: The page size of the result to be returned (defaults to 10).
+  sorting:
+    - name: sortBy
+      description: Sort by a predefined field.
+    - name: sortOrder
+      description: ascending (default) or descending.
+  applies_to: >-
+    User task search (GET /tasks and its environment/group/artifact/version variants) and
+    the running service-instance listing on the Service Execution endpoint. Not all
+    collection endpoints in the Public API accept them.
+  cursor: false
+  link_header: false
+filtering:
+  feel_expressions: >-
+    Event emitter subscriptions filter with a FEEL expression evaluated against the message
+    data — the same expression language used inside the models themselves.
+  instance_filters: [tags, name, id]
+  instance_filter_note: name/id support partial (like) matches.
+field_expansion:
+  supported: false
+metadata:
+  supported: true
+  note: >-
+    Service execution supports an application/json+metadata Accept variant that returns
+    execution metadata alongside the result.
+request_id_tracing:
+  header: request-tracking-identifier
+  direction: response
+  format: UUID
+  method: probed
+  note: >-
+    Present on every observed Public API response (e.g. 5c088275-aada-4528-88c7-81b758abd0cc
+    on GET /publicapi/login, 2026-09-02). Not documented, but stable and worth capturing for
+    support. The XML execution template also carries a requestId attribute.
+versioning:
+  in_path: false
+  ref: lifecycle/trisotech-lifecycle.yml
+rate_limit_signalling:
+  headers: []
+  status_on_exhaustion: null
+  note: >-
+    No RateLimit-*, X-RateLimit-* or Retry-After header was present on any observed
+    response, and no limits are documented. See rate-limits/trisotech-rate-limits.yml.
+idempotency:
+  supported: false
+  header: null
+  scope: null
+  retention: null
+  finding: >-
+    NOT SUPPORTED. There is no Idempotency-Key header, no request-deduplication window, and
+    no safe-retry guidance anywhere in the System Integration section or the 129-operation
+    API reference. This matters more than usual here: POST /deployments/bpmn/..., POST
+    /container/single, POST /event and POST /repositorypromote are all non-idempotent state
+    changes that an agent cannot safely retry after a timeout. No `Idempotency` pointer is
+    wired in apis.yml, because the provider does not offer the mechanism.
+dry_run_mode:
+  supported: partial
+  detail: >-
+    There is no request-level dry-run flag. There IS a modelling-time equivalent: the Test
+    Endpoint executes a service against DMN TCK test cases without publishing, GET on the
+    Service Execution endpoint returns an input template rather than executing, and the
+    modelers ship animators/simulators. See sandbox/trisotech-sandbox.yml.
+reversibility:
+  grade: documented
+  applicable: true
+  finding: >-
+    Trisotech's write surface has real, first-class reversal operations — deleted models can
+    be recovered, service instances can be aborted, change requests can be rejected, and
+    every model carries versions — but the provider states no window for any of them. Nothing
+    in the API reference or the System Integration docs says how long a deleted file stays
+    recoverable, or until what point an instance may be aborted. An agent can therefore learn
+    that an action is reversible in principle and NOT learn whether it is still reversible now.
+  surfaces:
+    - action: Delete a file or folder from a modeling place
+      operation: repositorycontentDelete
+      reversal: repositoryfilerecoveryPost
+      reversal_name: PlaceContentRecovery
+      window: null
+      window_source: null
+      note: >-
+        GET /repositoryfilerecovery lists what is recoverable and POST /repositoryfilerecovery
+        restores it. No retention period is published; the word "retention" does not appear in
+        the reference.
+    - action: Start a workflow or case instance
+      operation: service execution POST (per-service endpoint)
+      reversal: Delete a service instance
+      window: null
+      window_source: null
+      note: >-
+        "This endpoint permanently aborts (deletes) the given service instance (by identifier).
+        This has a cascading effect and also deletes any sub instances of this instance. This
+        operation also deletes any data associated with the service instance." The abort is
+        itself irreversible — it destroys instance data — so it reverses the start but cannot
+        itself be undone.
+      source: https://cloud.trisotech.com/help/service-library/service-rest-api-endpoint.html
+    - action: Raise a model-promotion change request
+      operation: changerequestPromoteModelsPost
+      reversal: changerequestPromoteModelsIdDelete (withdraw) / reject decision
+      window: null
+      note: Approval and rejection are both modelled; no time limit is stated.
+    - action: Publish a service to an execution environment
+      operation: executionrepositoryartifactPost
+      reversal: executionrepositoryartifactDelete
+      window: null
+      note: Deployment endpoints are symmetric — every POST /deployments/{lang}/... has a DELETE.
+    - action: Enable an event emitter
+      operation: emittersDefinitionsIdEnablePost
+      reversal: emittersDefinitionsIdDisablePost
+      window: null
+      note: Cleanly reversible; disable is non-destructive and the definition survives.
+    - action: Save a model
+      operation: repositorycontentPut
+      reversal: restore a previous version (repositoryfileversionGet lists them)
+      window: null
+      note: Model version history is retained; no stated depth or age limit.
+  irreversible:
+    - >-
+      Deleting a service instance destroys its data and all sub-instances. There is no undo.
+    - >-
+      Changing a Client App secret "invalidates all existing tokens" immediately.
+  what_would_raise_this_to_verified: >-
+    A published retention window for PlaceContentRecovery (e.g. "deleted files are
+    recoverable for N days") and a stated model-version retention depth.
+agent_readiness_notes:
+  - >-
+    The single biggest gap for an autonomous caller is the 500-on-missing-credentials
+    behaviour combined with the absence of idempotency: a timed-out POST cannot be
+    distinguished from a rejected one, and cannot be safely replayed.
+  - >-
+    The most agent-friendly part of the surface is the event catalog: 104 CloudEvents-shaped
+    message types with typed fields, published anonymously as JSON, plus a FEEL filter
+    language for subscriptions.
+evidence:
+  - url: https://cloud.trisotech.com/help/des/system-integration/rest-api-documentation.html
+    status: 200
+  - url: https://cloud.trisotech.com/help/des/system-integration/rest-api.html
+    status: 200
+  - url: https://cloud.trisotech.com/help/service-library/service-rest-api-endpoint.html
+    status: 200
+  - url: https://cloud.trisotech.com/publicapi/login
+    status: 200

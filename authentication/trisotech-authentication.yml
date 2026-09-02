@@ -1,0 +1,90 @@
+generated: '2026-09-02'
+method: searched
+source: https://cloud.trisotech.com/help/des/system-integration/rest-api.html
+docs:
+  - https://cloud.trisotech.com/help/des/system-integration/rest-api.html
+  - https://cloud.trisotech.com/help/admin/client-apps.html
+  - https://cloud.trisotech.com/help/des/system-integration/rest-api-documentation.html
+name: Trisotech Digital Enterprise Suite Authentication
+summary: >-
+  The Trisotech Public API is protected with OAuth 2. Every call carries a bearer token in
+  the Authorization header; tokens are issued to a Client App created in the Digital
+  Enterprise Suite Administration application, and the app's granted scopes bound the token.
+  End-user sign-in to the suite itself federates through SAML2 or OpenID Connect.
+securitySchemes:
+  - key: oauth2_authorization_code
+    type: oauth2
+    flow: authorizationCode
+    authorizationUrl: https://{instance}.trisotech.com/oauth2/auth
+    tokenUrl: https://{instance}.trisotech.com/oauth2/token
+    pkce: supported
+    description: >-
+      Standard OAuth 2 authorization code flow (standard or PKCE) requiring a user
+      authorization. This is the primary flow the provider documents.
+    scopes_ref: scopes/trisotech-scopes.yml
+  - key: oauth2_client_credentials
+    type: oauth2
+    flow: clientCredentials
+    tokenUrl: https://{instance}.trisotech.com/oauth2/token
+    description: >-
+      System-to-system flow, enabled per Client App with the "Support Client Credentials"
+      flag. The app's Associated System Account is the identity used for access checks.
+    caveat: >-
+      The Client Apps admin page states the suite "does not currently support apps
+      authorization (eg. Client Credentials flow) and require an access code flow", while
+      the same page documents a "Support Client Credentials" toggle and an associated
+      system account. Both statements are the provider's own; treat client_credentials as
+      available but instance/version dependent and confirm against your own instance.
+    scopes_ref: scopes/trisotech-scopes.yml
+  - key: bearer
+    type: http
+    scheme: bearer
+    in: header
+    header: Authorization
+    description: >-
+      "Authorization: Bearer <token>". A bearer token can also be generated manually from
+      the Administration application with a chosen expiry. The provider states a bearer
+      token "should be kept secret and is the equivalent of a username/password combination."
+identity_federation:
+  user_login:
+    - SAML 2.0
+    - OpenID Connect (OIDC)
+  provisioning:
+    - standard: SCIM
+      docs: https://cloud.trisotech.com/help/admin/scim-aad.html
+      note: SCIM user/group provisioning is documented for Azure AD / Entra ID.
+  source: https://www.trisotech.com/security/
+request_requirements:
+  - header: Authorization
+    value: Bearer <token>
+    required: true
+    exception: the Public API Login resource
+  - header: Accept
+    value: application/json
+    required: recommended
+    note: >-
+      "By default, if the Accept header is not defined, the API produces XML results for
+      legacy support. This format is deprecated." Always send Accept: application/json.
+unauthenticated_behaviour:
+  probed: '2026-09-02'
+  request: GET https://cloud.trisotech.com/publicapi/user (no Authorization header)
+  http_status: 500
+  body: '{"error":[{"code":"RequiresLogin","systemMessage":"This service requires a User Login","userMessage":"You should Login First"}]}'
+  finding: >-
+    Missing credentials are answered with HTTP 500 and an application error code, not the
+    RFC 7235 401 an agent expects. An automated client cannot distinguish "not authenticated"
+    from "server fault" by status code alone and must read error[].code.
+api_key: null
+mutual_tls: null
+evidence:
+  - url: https://cloud.trisotech.com/help/des/system-integration/rest-api.html
+    status: 200
+  - url: https://cloud.trisotech.com/help/admin/client-apps.html
+    status: 200
+  - url: https://cloud.trisotech.com/publicapi/user
+    status: 500
+  - url: https://cloud.trisotech.com/publicapi/login
+    status: 200
+  - url: https://cloud.trisotech.com/oauth2/auth
+    status: 200
+    note: redirects to the instance login when unauthenticated

@@ -1,0 +1,87 @@
+generated: '2026-09-02'
+method: probed
+source: probe of /.well-known/* on every Trisotech host in this profile
+name: Trisotech well-known documents
+summary: >-
+  Every named /.well-known/ path was probed on both the marketing host and the cloud
+  instance host. Nothing is served. Recorded as an absence — no WellKnown or SecurityTxt
+  pointer is wired in apis.yml, because none of these documents exists.
+checked: '2026-09-02'
+hosts:
+  - host: www.trisotech.com
+    note: >-
+      404s return the site's HTML 404 page (33,282 bytes) with status 404 — a correct hard
+      404, not a soft-200 SPA catch-all.
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+        file: null
+      - path: /.well-known/openid-configuration
+        status: 404
+        file: null
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+        file: null
+      - path: /.well-known/oauth-protected-resource
+        status: 404
+        file: null
+      - path: /.well-known/api-catalog
+        status: 404
+        file: null
+      - path: /.well-known/ai-plugin.json
+        status: 404
+        file: null
+      - path: /.well-known/agent-card.json
+        status: 404
+        file: null
+      - path: /.well-known/agent.json
+        status: 404
+        file: null
+      - path: /.well-known/aauth-resource.json
+        status: 404
+        file: null
+  - host: cloud.trisotech.com
+    note: >-
+      The application server answers each path with a 404 and a plain-text body of the form
+      "No static resource .well-known/<name>." — an unambiguous hard miss.
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+        file: null
+      - path: /.well-known/openid-configuration
+        status: 404
+        file: null
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+        file: null
+      - path: /.well-known/oauth-protected-resource
+        status: 404
+        file: null
+      - path: /.well-known/api-catalog
+        status: 404
+        file: null
+      - path: /.well-known/ai-plugin.json
+        status: 404
+        file: null
+      - path: /.well-known/agent-card.json
+        status: 404
+        file: null
+      - path: /.well-known/agent.json
+        status: 404
+        file: null
+      - path: /.well-known/aauth-resource.json
+        status: 404
+        file: null
+findings:
+  - >-
+    No security.txt, so the vulnerability-reporting route is prose on a marketing page rather
+    than a discoverable RFC 9116 document.
+  - >-
+    No OAuth/OIDC discovery document, even though the suite runs a full OAuth 2 authorization
+    server at https://{instance}.trisotech.com/oauth2/auth and /oauth2/token. A client must
+    read the admin documentation to find endpoints that RFC 8414 would have made discoverable.
+  - >-
+    No agent card at either the current or the legacy path. Nothing has been written to a2a/.
+  - >-
+    robots.txt is served on www.trisotech.com (200, Allow: /, with a sitemap) but not on
+    cloud.trisotech.com (404).

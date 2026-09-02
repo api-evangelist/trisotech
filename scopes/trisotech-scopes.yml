@@ -1,0 +1,100 @@
+generated: '2026-09-02'
+method: searched
+source: https://cloud.trisotech.com/help/admin/client-apps.html
+docs: https://cloud.trisotech.com/help/admin/client-apps.html
+name: Trisotech Digital Enterprise Suite OAuth 2 Scopes
+summary: >-
+  Trisotech publishes the complete grant/scope reference for Client Apps in the
+  Digital Enterprise Suite administration documentation. Scopes are attached to a
+  Client App as "grants" and inherited by every bearer token the app issues.
+  Transcribed verbatim from the provider's own table; no scope was inferred.
+flows:
+  authorization_code:
+    authorizationUrl: https://{instance}.trisotech.com/oauth2/auth
+    tokenUrl: https://{instance}.trisotech.com/oauth2/token
+    pkce: supported
+  client_credentials:
+    tokenUrl: https://{instance}.trisotech.com/oauth2/token
+    note: >-
+      Enabled per Client App via the "Support Client Credentials" flag; the app's
+      Associated System Account supplies the identity used in access checks.
+scope_count: 20
+scopes:
+  - scope: repo_r
+    name: Repository read
+    description: Read modeling places.
+  - scope: repo_w
+    name: Repository write
+    description: Write, delete, rename and create models in modeling places.
+  - scope: service_x
+    name: Service execution
+    description: Deprecated scope that was used to transform model types.
+    deprecated: true
+  - scope: group_r
+    name: Group read
+    description: Read groups.
+  - scope: group_w
+    name: Group write
+    description: Write, delete, rename and invite to groups.
+  - scope: graph_r
+    name: Graph read
+    description: Use the SPARQL API on the Digital Enterprise Graph.
+  - scope: users_r
+    name: Users read
+    description: Read users.
+  - scope: users_w
+    name: Users write
+    description: Write and delete users.
+  - scope: admin
+    name: Admin
+    description: >-
+      The admin API is not documented for customers and this scope should not be used.
+    note: Provider explicitly discourages use.
+  - scope: mvn_r
+    name: Execution environment read
+    description: Query the execution environments and their content.
+  - scope: mvn_w
+    name: Execution environment write
+    description: Publish and delete services in execution environments.
+  - scope: mvn_d
+    name: Execution environment download
+    description: Download services from execution environments.
+  - scope: emitter_r
+    name: Emitter read
+    description: Read emitter configuration and audit log files.
+  - scope: emitter_w
+    name: Emitter write
+    description: Write emitter configuration.
+  - scope: bpmn_x
+    name: BPMN execution
+    description: Access the workflow automation API.
+  - scope: cmmn_x
+    name: CMMN execution
+    description: Access the case automation API.
+  - scope: dmn_x
+    name: DMN execution
+    description: Access the decision automation API.
+  - scope: docker_r
+    name: Docker read
+    description: Download containers built locally.
+  - scope: asset_w
+    name: Assets write
+    description: Write to the static assets resource.
+  - scope: openid
+    name: OpenID
+    description: >-
+      Can be used by Digital Distributed Containers to obtain an OpenID token identity.
+notes:
+  - >-
+    20 grants are published. One (service_x) is marked deprecated by the provider and
+    one (openid) is an identity grant rather than an API access scope; both are kept
+    in the list and flagged rather than dropped.
+  - >-
+    Scopes are granted at the Client App level in the Administration application,
+    not requested per-authorization-request in the docs shown.
+evidence:
+  - url: https://cloud.trisotech.com/help/admin/client-apps.html
+    status: 200
+  - url: https://cloud.trisotech.com/oauth2/token
+    status: 405
+    note: GET rejected with "HTTP method GET is not supported by this URL" — endpoint is live and POST-only.

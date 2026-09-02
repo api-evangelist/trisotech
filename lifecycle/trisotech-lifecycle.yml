@@ -1,0 +1,88 @@
+generated: '2026-09-02'
+method: searched
+source: https://www.trisotech.com/release-notes/
+name: Trisotech Digital Enterprise Suite Lifecycle
+summary: >-
+  Trisotech runs two concurrent release trains — a current 13.0.x line and a 12.14.x LTS
+  line — and publishes a dated release-notes page plus a live status page. It does NOT
+  publish a written deprecation policy, an SLA, or an API-version support window; individual
+  deprecations are announced inline in the documentation with no stated sunset date.
+versioning:
+  scheme: product version (major.minor.patch), applied to the suite, not to the API
+  api_versioning: none
+  api_versioning_note: >-
+    The Public API is unversioned in its path (https://{instance}.trisotech.com/publicapi/...).
+    There is no /v1/ segment, no version header, and no version negotiation documented. The
+    generated API reference is stamped with the running instance version (13.0.14 observed
+    2026-09-02), so the contract moves with the deployment.
+  current: '13.0.14'
+  lts: '12.14.5'
+  lts_policy_published: false
+  migration_guide:
+    exists: true
+    note: >-
+      "Clients Hosting the Digital Enterprise Suite - Before upgrading from version 12 to
+      version 13, ensure that you have read the migration guide."
+    url: https://cloud.trisotech.com/help/client-hosting/v13-migration.html
+status_page:
+  url: https://www.trisotech.com/status/
+  http_status: 200
+  provider: first-party
+  granularity: whole-instance
+  finding: >-
+    A real, live status page, but it renders a single sentence ("All instances are up").
+    There is no component breakdown, no incident history, no scheduled-maintenance calendar,
+    and no machine-readable status endpoint or RSS/Atom incident feed, so an agent cannot
+    poll it for anything more than a page fetch.
+sla:
+  published: false
+  note: No public SLA, uptime target, or support-response commitment was found on the site.
+deprecation:
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  note: >-
+    No deprecation policy, notice period, or RFC 8594 Sunset/Deprecation header support is
+    documented. Deprecations are announced as prose inside the relevant doc page, with no
+    removal date. This is why no `Deprecation` pointer is wired in apis.yml — the artifact
+    records the absence rather than asserting a policy the provider does not publish.
+  observed_deprecations:
+    - item: XML response format on the Public API
+      statement: >-
+        "By default, if the Accept header is not defined, the API produces XML results for
+        legacy support. This format is deprecated."
+      source: https://cloud.trisotech.com/help/des/system-integration/rest-api.html
+      sunset_date: null
+    - item: service_x OAuth grant
+      statement: Deprecated scope that was used to transform model types.
+      source: https://cloud.trisotech.com/help/admin/client-apps.html
+      sunset_date: null
+    - item: MCP Server-Sent Events transport
+      statement: >-
+        "The MCP standard deprecated the Server-Sent Events (SSE) protocol and recommended
+        using Streamable HTTP." (upstream deprecation, still offered by Trisotech)
+      source: https://cloud.trisotech.com/help/service-library/mcp.html
+      sunset_date: null
+maturity_labels:
+  note: >-
+    Trisotech marks pre-GA surfaces in the docs with "This feature is currently incubating".
+    Three of the agent-relevant surfaces carry that label.
+  incubating:
+    - MCP endpoint (service and environment)
+    - CDS Hooks endpoint
+    - SMART on FHIR applications
+deprecated_operations_in_spec: []
+deprecated_operations_note: >-
+  The machine-readable OpenAPI is behind the instance login, so per-operation `deprecated`
+  flags could not be read. None of the 129 operations in the public reference is labelled
+  deprecated in the rendered page.
+evidence:
+  - url: https://www.trisotech.com/status/
+    status: 200
+  - url: https://www.trisotech.com/release-notes/
+    status: 200
+  - url: https://cloud.trisotech.com/help/des/system-integration/rest-api.html
+    status: 200
+  - url: https://cloud.trisotech.com/help/service-library/mcp.html
+    status: 200

@@ -1,0 +1,365 @@
+generated: '2026-09-02'
+method: derived
+source: https://cloud.trisotech.com/help/des/system-integration/rest-api-documentation.html
+name: Trisotech Public API data model
+summary: >-
+  The entity graph behind the 129-operation Public API, transcribed from the Models section
+  of the provider's published API reference and cross-read against the operation paths. The
+  machine-readable OpenAPI is behind the instance login, so field-level $ref edges could not
+  be walked; every relationship below is grounded in a published path, a named model, or a
+  documented sentence, and is labelled with the evidence that grounds it. Nothing has been
+  inferred from a schema this pass did not read.
+provenance_caveat: >-
+  DERIVED FROM RENDERED DOCUMENTATION, NOT FROM A SPEC FILE. Schema names are verbatim; the
+  relationships carry an explicit confidence and basis. Treat medium/low rows as leads to
+  confirm against an authenticated /publicapi/doc, not as contract.
+schema_count_published: 106
+core_entity_count: 42
+envelope_wrapper_count: 64
+envelope_note: >-
+  64 of the 106 published models are generated response/request wrappers (…Get200Response,
+  …PostRequest, …AllOf, …Inner). They are listed under `generated_wrappers` for completeness
+  but are transport shapes, not domain entities.
+id_conventions:
+  place_id:
+    form: UUID
+    example: 051669c9-f251-4cb8-8bf5-b17445b17cab
+    source: https://cloud.trisotech.com/help/digital-modeling-suite/sparql.html
+    note: >-
+      A modeling place's id also names its RDF graph:
+      http://trisotech.com/graph/1.0/graph#<place id>.
+  service_coordinates:
+    form: Maven-style GAV
+    parts: [environment, groupId, artifactId, version]
+    model: GAV
+    note: >-
+      Deployed services are addressed by Maven coordinates throughout —
+      /deployments/{lang}/{environment}/{groupId}/{artifactId}/{version} and
+      /migration/services/{environment}/{groupId}/{artifactId}/{version}. The execution
+      environment is literally a Maven repository (the grants are named mvn_r / mvn_w / mvn_d).
+  asset_addressing:
+    form: hierarchical
+    levels: [environment, group, artifact, name]
+    note: >-
+      Assets resolve at four nesting levels, each level optional from the right —
+      /assets, /assets/{environment}, /assets/{environment}/{group},
+      /assets/{environment}/{group}/{artifact}, each addressable by {name}.
+  case_file_paths:
+    form: filesystem-like path
+    example: /documents/report.pdf
+    source: https://cloud.trisotech.com/help/service-library/service-rest-api-endpoint.html
+    note: >-
+      Unstructured case file items are addressed by path and return metadata only; structured
+      items are addressed by name and return completely.
+domains:
+  - name: Modeling repository
+    entities: [Repository, RepositoryMember, RepositoryRights, File, FileOrFolder, FileOrFolderFile, FileOrFolderFolder, Member]
+    operations_prefix: [/repository, /repositorycontent, /repositorymember, /repositorylink, /repositorysearch, /repositoryfileversion, /repositoryfilerecovery, /repositorypromote]
+  - name: Governance and promotion
+    entities: [PromoteModelsChangeRequestContent, PromoteModelsCRModel, PromotePlaceChangeRequestContent, ChangeRequestMember, ValidationIssue]
+    operations_prefix: [/changerequest/promote-models, /changerequest/promote-place, /repositorypromote]
+  - name: Execution and deployment
+    entities: [ExecutionRepository, GAV, ServiceDescriptor, ContainerBuilt, ServiceMigrationContext, ServiceMigrationReport, ServiceInstanceMigrationStatus]
+    operations_prefix: [/executionrepository, /executionrepositoryartifact, /executionrepositoryfile, /deployments, /container, /migration/services]
+  - name: Events
+    entities: [Event, EventDef, EmitterDef, EmitterType, EmitterParameter, LogEntry, UserEvent, CommentEvent]
+    operations_prefix: [/event, /emitters]
+    ref: asyncapi/trisotech-events.yml
+  - name: Identity and access
+    entities: [User, UserDetail, GroupDef, Identity, Member]
+    operations_prefix: [/user, /groups, /identity, /requestaccess, /login]
+  - name: Collaboration
+    entities: [Issue, CommentEvent]
+    operations_prefix: [/issue, /issuecomment]
+  - name: Data and assets
+    entities: [DataStore, Asset, Mimetype]
+    operations_prefix: [/datastore, /assets, /mimetype, /testdata]
+  - name: AI agents
+    entities: [AIAgent]
+    operations_prefix: [/aiagents]
+    note: >-
+      AIAgent carries mcpAsTools[] and servicesAsTools[] members (published as
+      AIAgentMcpAsToolsInner and AIAgentServicesAsToolsInner) — the model that binds an agent
+      to the MCP servers and Service Library services it may call.
+relationships:
+  - from: Repository
+    kind: has_many
+    to: RepositoryMember
+    via: member
+    confidence: high
+    basis: >-
+      GET/PUT/POST/DELETE /repositorymember operate on members of a place; the RepositoryMember model exists.
+  - from: Repository
+    kind: has_many
+    to: FileOrFolder
+    via: content
+    confidence: high
+    basis: >-
+      GET /repositorycontent lists a place's content; FileOrFolderFile and FileOrFolderFolder are the two published variants.
+  - from: RepositoryMember
+    kind: belongs_to
+    to: User
+    via: user
+    confidence: medium
+    basis: >-
+      Members are users; the Users group and the Members group are separate resources with no published join field.
+  - from: Repository
+    kind: has_one
+    to: RepositoryRights
+    via: rights
+    confidence: medium
+    basis: >-
+      RepositoryRights is published alongside Repository; the docs describe per-place access rights.
+  - from: File
+    kind: has_many
+    to: File
+    via: version
+    confidence: high
+    basis: >-
+      GET /repositoryfileversion returns a file's version history.
+  - from: GroupDef
+    kind: has_many
+    to: Member
+    via: members
+    confidence: high
+    basis: >-
+      GET/PUT/DELETE /groups/{groupId}/members.
+  - from: ExecutionRepository
+    kind: has_many
+    to: GAV
+    via: artifact
+    confidence: high
+    basis: >-
+      GET/POST/DELETE /executionrepositoryartifact addresses artifacts inside an execution repository by Maven coordinates.
+  - from: GAV
+    kind: has_one
+    to: ServiceDescriptor
+    via: descriptor
+    confidence: medium
+    basis: >-
+      ServiceDescriptor describes a deployed service; deployments are addressed by GAV.
+  - from: EmitterDef
+    kind: has_many
+    to: LogEntry
+    via: audit
+    confidence: high
+    basis: >-
+      GET /emitters/audit/{id} downloads an emitter's audit log.
+  - from: EmitterDef
+    kind: has_one
+    to: EmitterType
+    via: type
+    confidence: high
+    basis: >-
+      The emitter definition's `type` attribute is documented as the integration strategy; EmitterType is published.
+  - from: EmitterDef
+    kind: has_many
+    to: EmitterParameter
+    via: parameters
+    confidence: medium
+    basis: >-
+      EmitterParameter is published as a sibling of EmitterDef and EmitterType.
+  - from: EmitterDef
+    kind: has_one
+    to: Identity
+    via: identityRef
+    confidence: high
+    basis: >-
+      The documented emitter attribute `identityRef` is an 'optional reference to an identity used to publish on the emitter'.
+  - from: EmitterDef
+    kind: belongs_to
+    to: User
+    via: owner
+    confidence: high
+    basis: >-
+      The documented emitter attribute `owner` is the 'user defining this emitter'.
+  - from: Issue
+    kind: has_many
+    to: CommentEvent
+    via: comment
+    confidence: high
+    basis: >-
+      /issuecomment is a separate resource operating on comments of an issue.
+  - from: DataStore
+    kind: has_many
+    to: DataStoreContent
+    via: contents
+    confidence: high
+    basis: >-
+      /datastore/definitions defines the store; /datastore/contents/{id} holds its rows. The content shape is published only as DatastoreContentsIdGet200Response.
+  - from: PromoteModelsChangeRequestContent
+    kind: has_many
+    to: PromoteModelsCRModel
+    via: model
+    confidence: high
+    basis: >-
+      GET/PUT /changerequest/promote-models/{id}/content carries the models in a promotion request.
+  - from: PromoteModelsChangeRequestContent
+    kind: has_many
+    to: ChangeRequestMember
+    via: member
+    confidence: medium
+    basis: >-
+      ChangeRequestMember is published; change requests are approved or rejected by members.
+  - from: ServiceMigrationContext
+    kind: has_one
+    to: ServiceMigrationReport
+    via: report
+    confidence: medium
+    basis: >-
+      POST /migration/services/... returns migration status; both models are published.
+  - from: ServiceMigrationReport
+    kind: has_many
+    to: ServiceInstanceMigrationStatus
+    via: instance
+    confidence: medium
+    basis: >-
+      A migration report covers the instances migrated.
+  - from: AIAgent
+    kind: has_many
+    to: AIAgentMcpAsToolsInner
+    via: mcpAsTools
+    confidence: high
+    basis: >-
+      Published member model name.
+  - from: AIAgent
+    kind: has_many
+    to: AIAgentServicesAsToolsInner
+    via: servicesAsTools
+    confidence: high
+    basis: >-
+      Published member model name.
+  - from: Asset
+    kind: belongs_to
+    to: GAV
+    via: artifact
+    confidence: high
+    basis: >-
+      Assets are addressable at /assets/{environment}/{group}/{artifact}/{name}.
+  - from: User
+    kind: has_many
+    to: GroupDef
+    via: groups
+    confidence: high
+    basis: >-
+      UserDetailGroupsInner is a published member of UserDetail.
+
+core_entities:
+  - AIAgent
+  - Asset
+  - ChangeRequestMember
+  - CommentEvent
+  - ContainerBuilt
+  - DataStore
+  - EmitterDef
+  - EmitterParameter
+  - EmitterType
+  - ErrorMessage
+  - Event
+  - EventDef
+  - ExecutionRepository
+  - File
+  - FileOrFolder
+  - FileOrFolderFile
+  - FileOrFolderFolder
+  - GAV
+  - GroupDef
+  - Identity
+  - Issue
+  - LogEntry
+  - Member
+  - Mimetype
+  - PromoteModelsCRModel
+  - PromoteModelsCRUpdateModel
+  - PromoteModelsChangeRequestContent
+  - PromoteModelsChangeRequestContentOnly
+  - PromoteModelsChangeRequestUpdateContent
+  - PromotePlaceChangeRequestContent
+  - PromotePlaceChangeRequestContentOnly
+  - Repository
+  - RepositoryMember
+  - RepositoryRights
+  - ServiceDescriptor
+  - ServiceInstanceMigrationStatus
+  - ServiceMigrationContext
+  - ServiceMigrationReport
+  - User
+  - UserDetail
+  - UserEvent
+  - ValidationIssue
+generated_wrappers:
+  - AIAgentMcpAsToolsInner
+  - AIAgentServicesAsToolsInner
+  - AccessRequest
+  - AiagentsGet200Response
+  - AssetsGet200Response
+  - ChangeRequest
+  - ChangeRequestDecisionRequest
+  - ChangerequestPromoteModelsGet200Response
+  - ChangerequestPromoteModelsIdContentGet200Response
+  - ChangerequestPromoteModelsPost200Response
+  - ChangerequestPromotePlaceIdContentGet200Response
+  - ChangerequestPromotePlacePost200Response
+  - CommentEventAllOf
+  - ContainerMultiplePostRequest
+  - ContainerMultiplePostRequestServicesInner
+  - ContainerSinglePostRequest
+  - DatastoreContentsIdGet200Response
+  - DatastoreContentsIdPost200Response
+  - DeploymentsBpmnEnvironmentGroupIdArtifactIdVersionPostRequest
+  - EmittersDefinitionsGet200Response
+  - EmittersDefinitionsIdGet200Response
+  - EmittersGet200Response
+  - ErrorMessageErrorInner
+  - ExecutionrepositoryDelete200Response
+  - ExecutionrepositoryGet200Response
+  - ExecutionrepositoryartifactGet200Response
+  - ExecutionrepositoryartifactPost200Response
+  - GroupsGet200Response
+  - GroupsPost200Response
+  - IdentityDelete200Response
+  - IdentityGet200Response
+  - IssueGet200Response
+  - IssuePut200Response
+  - IssuecommentGet200Response
+  - IssuecommentPut200Response
+  - LoginDelete200Response
+  - LoginGet200Response
+  - MimetypeGet200Response
+  - MimetypeGet200ResponseDataInner
+  - NewChangeRequest
+  - PromoteModelsChangeRequest
+  - PromoteModelsNewChangeRequest
+  - PromotePlaceChangeRequest
+  - PromotePlaceNewChangeRequest
+  - PromotePlaceNewChangeRequestAllOf
+  - PromotePlaceNewChangeRequestAllOfContent
+  - RepositoryGet200Response
+  - RepositoryPut200Response
+  - RepositorycontentGet200Response
+  - RepositorycontentPackagePost200Response
+  - RepositoryfilerecoveryPost200Response
+  - RepositoryfileversionGet200Response
+  - RepositorymemberGet200Response
+  - RepositorymemberPut200Response
+  - RepositorypromotePost200Response
+  - RepositorypromotePost200ResponseData
+  - RequestaccessGet200Response
+  - ServiceMigrationContextProcessNodesValueInner
+  - TestdataGet200Response
+  - TestdataTypeGet200Response
+  - UserDetailGroupsInner
+  - UserEventAllOf
+  - UserGet200Response
+  - UserTasksInner
+not_derivable_this_pass:
+  - Field-level types and required flags for each entity (the rendered reference lists them per model, but they were not transcribed wholesale here).
+  - Cardinality on any relationship marked medium.
+  - The DataStore content schema, which is published only as a generated response wrapper.
+evidence:
+  - url: https://cloud.trisotech.com/help/des/system-integration/rest-api-documentation.html
+    status: 200
+  - url: https://cloud.trisotech.com/help/digital-modeling-suite/sparql.html
+    status: 200
+  - url: https://cloud.trisotech.com/help/service-library/service-rest-api-endpoint.html
+    status: 200

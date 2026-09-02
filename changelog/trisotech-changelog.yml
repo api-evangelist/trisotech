@@ -1,0 +1,184 @@
+generated: '2026-09-02'
+method: searched
+source: https://www.trisotech.com/release-notes/
+name: Trisotech Digital Enterprise Suite Release Notes
+summary: >-
+  Trisotech publishes a single dated, versioned release-notes page covering the whole
+  Digital Enterprise Suite, with an email subscription for release notifications. Releases
+  are frequent — 16 dated entries in the ~5 months preceding this pass — and run two
+  concurrent trains: the current 13.0.x line and a 12.14.x LTS line that receives backported
+  fixes and security updates. Entries are product-wide, not API-specific; there is no
+  separate API changelog and no per-release note of API contract changes.
+scheme: semver-like (major.minor.patch), two concurrent trains
+current_version: 13.0.14
+current_version_date: '2026-08-27'
+lts_version: 12.14.5
+lts_version_date: '2026-08-25'
+trains:
+  - name: '13.0.x'
+    status: current
+  - name: '12.14.x LTS'
+    status: long-term support
+    note: >-
+      Receives backported bug fixes plus explicit "Security updates." lines. Clients hosting
+      the suite themselves are told to read the migration guide before moving 12 -> 13.
+subscription:
+  type: email
+  where: https://www.trisotech.com/release-notes/
+  note: A name/email form on the release-notes page subscribes to release notifications.
+feeds:
+  rss: https://www.trisotech.com/feed/
+  note: >-
+    The site RSS feed carries release-note posts alongside blog content; each release also
+    has its own permalink page (e.g.
+    https://www.trisotech.com/digital-enterprise-suite-release-notes-13-0-14/).
+api_changelog: null
+api_changelog_note: >-
+  No API-specific changelog is published. API-affecting changes surface only inside the
+  general release notes; the API reference itself is stamped with the running instance
+  version (13.0.14 at the time of this pass) rather than an API version.
+caveat: >-
+  The page warns: "Historical release notes may describe capabilities from earlier releases
+  that may no longer be supported in current Trisotech software releases."
+entry_count_recorded: 14
+entries:
+  - version: '13.0.14'
+    date: '2026-08-27'
+    train: 13.0.x
+    breaking: false
+    additions: []
+    highlights:
+      - "Imported flag on Client Access Licenses could be lost after a login."
+      - "Saving a model could incorrectly identify it as using a duplicate namespace."
+  - version: '13.0.12'
+    date: '2026-08-25'
+    train: 13.0.x
+    breaking: false
+    additions: []
+    highlights:
+      - "Deleting an empty folder in a production place could result in an error."
+      - "Fixed an issue with the MISMO XML parsing of the Data Type Metadata Attributes."
+      - "Canceling a case instance can lead to an error."
+  - version: '12.14.5'
+    date: '2026-08-25'
+    train: 12.14.x LTS
+    breaking: false
+    additions: []
+    highlights:
+      - "Canceling a case instance can lead to an error."
+      - "Security updates."
+  - version: '13.0.11'
+    date: '2026-08-19'
+    train: 13.0.x
+    breaking: false
+    additions: []
+    highlights:
+      - "The detail button in the canvas could be hard to click and disappear too quickly."
+      - "Deleting a file or folder in a production place could be prevented by a rule that should not have triggered."
+      - "Missing error code on workflow execution error could mask the underlying condition."
+      - "Business knowledge packages (BKP) exported from version 12 could not always be imported into version 13."
+      - "OIDC user provider could omit the automatic account creation switch."
+      - "Some links between models are not properly kept relative when saving a model."
+  - version: '12.14.4'
+    date: '2026-08-19'
+    train: 12.14.x LTS
+    breaking: false
+    additions: []
+    highlights:
+      - "User task search did not properly consider group membership."
+      - "SCIM integration did not properly handle missing attributes or groups not found."
+      - "Security updates."
+  - version: '12.14.3'
+    date: '2026-07-30'
+    train: 12.14.x LTS
+    breaking: false
+    additions: []
+    highlights:
+      - "Service instance migration in some cases didn't ask for node mapping which caused failure."
+      - "Delete of cases could lead to storage deletions in cases delete operation itself failed."
+      - "Security updates."
+  - version: '13.0.10'
+    date: '2026-07-30'
+    train: 13.0.x
+    breaking: false
+    additions: []
+    highlights:
+      - "Multiple start events in BPMN process were not properly selected when starting instance."
+      - "Some include models could be indexed accidentally."
+      - "Service instance migration in some cases didn't ask for node mapping which caused failure."
+      - "Delete of cases could lead to storage deletions in cases delete operation itself failed."
+      - "Security updates."
+  - version: '13.0.9'
+    date: '2026-07-24'
+    train: 13.0.x
+    breaking: false
+    additions: []
+    highlights:
+      - "Security updates."
+  - version: '13.0.8'
+    date: '2026-07-22'
+    train: 13.0.x
+    breaking: false
+    additions: []
+    highlights:
+      - "Digital Distributed Containers can now be built using a non multi-platform (amd64/arm64) base image that is client hosted."
+      - "Linked terms were not properly resolved for some case, decision and shared data models."
+      - "Advanced data type properties could be missing in some case, decision and shared data models."
+  - version: '13.0.7'
+    date: '2026-07-17'
+    train: 13.0.x
+    breaking: false
+    additions: []
+    highlights:
+      - "Indexing data type elements referencing a reused type could be incorrectly indexed (additional fixes)."
+      - "When force pushing commits to places using the admin Place interface, place access were incorrectly reset."
+      - "Accessing the different in models in the change request interface would not work with some models."
+      - "Labels on decision model links were lost after a model reload."
+  - version: '13.0.6'
+    date: '2026-07-16'
+    train: 13.0.x
+    breaking: false
+    additions: []
+    highlights:
+      - "Indexing data type elements referencing a reused type could be incorrectly indexed."
+      - "Data Store using very complex graph data types from multiple models could be incorrectly resolved."
+      - "The Data Store edition user interface now have an horizontal scrollbar that is always accessible."
+      - "When force pushing commits to places using the admin Place interface, some model version could not be loaded from the UI."
+  - version: '13.0.5'
+    date: '2026-07-15'
+    train: 13.0.x
+    breaking: false
+    additions: []
+    highlights:
+      - "Some DMN models could not be automated because of a parser mis-configuration."
+  - version: '12.14.2'
+    date: '2026-07-14'
+    train: 12.14.x LTS
+    breaking: false
+    additions: []
+    highlights:
+      - "Security updates."
+  - version: '13.0.4'
+    date: '2026-07-14'
+    train: 13.0.x
+    breaking: false
+    additions: []
+    highlights:
+      - "Changing the license in the admin panel did not properly output the current license."
+      - "The indexer status block was shown even when the feature was not subscribed."
+      - "It was not possible to enter a description from a boxed context entry."
+      - "Named parameters were not always properly recognized after a fucntion call is used as a parameter value."
+      - "The first named parameter was not recognized in subsequent function calls within the same block."
+      - "The selection moved by 2 entries when using the keyboard to autocomplete a FEEL expression."
+evidence:
+  - url: https://www.trisotech.com/release-notes/
+    status: 200
+  - url: https://www.trisotech.com/digital-enterprise-suite-release-notes-13-0-14/
+    status: 200
+  - url: https://www.trisotech.com/feed/
+    status: 200
+notes:
+  - >-
+    Every entry recorded here is titled "Bug fixes" by the provider. Feature announcements
+    live on the blog and product pages, not in the release notes, so `breaking` and
+    `additions` are recorded as empty rather than guessed.

@@ -1,0 +1,24 @@
+generated: '2026-09-02'
+method: probed
+source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
+hosts:
+- host: www.trisotech.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Oct 20 19:48:30 2026 GMT
+  hsts: false
+- host: cloud.trisotech.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Nov 23 19:49:53 2026 GMT
+  hsts: true
+  hsts_max_age: 31536000
+domains:
+- domain: trisotech.com
+  dnssec: true
+  caa:
+  - 0 issue "pki.goog"
+  - 0 issue "letsencrypt.org"
+  spf: true
+  dmarc: true
+  dmarc_policy: none

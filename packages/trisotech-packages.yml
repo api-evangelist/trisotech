@@ -1,0 +1,111 @@
+generated: '2026-09-02'
+method: searched
+source: registry search across npm, PyPI, Maven Central, NuGet, RubyGems, Packagist and crates.io
+name: Trisotech client libraries and packages
+summary: >-
+  Trisotech publishes NO first-party SDK or client library to any public package registry.
+  Every registry was queried unauthenticated on 2026-09-02 and the only Trisotech-named
+  artifact anywhere is a third-party one maintained by the Red Hat KIE project. The
+  integration path Trisotech documents instead is code generation: each published service
+  emits its own OpenAPI document, which the customer feeds to Swagger Editor or an API
+  gateway to produce a client.
+official_package_count: 0
+package_count: 1
+packages:
+  - name: org.kie:kie-dmn-trisotech
+    registry: maven
+    url: https://search.maven.org/artifact/org.kie/kie-dmn-trisotech
+    official: false
+    owner: Red Hat / KIE (Drools) project
+    description: >-
+      KIE's DMN extension for Trisotech-authored DMN models. Third-party interoperability
+      support, not a Trisotech client for the Trisotech API.
+    version: 10.2.0
+    published: '2026-03-28'
+    published_method: read from the Maven Central search API `timestamp` field (1774685187000).
+registry_probes:
+  - registry: npm
+    endpoint: https://registry.npmjs.org/-/v1/search?text=trisotech
+    result_count: 0
+    version: null
+    note: Zero packages match. No @trisotech scope exists.
+  - registry: pypi
+    endpoint: https://pypi.org/pypi/trisotech/json
+    status: 404
+    version: null
+  - registry: maven
+    endpoint: https://search.maven.org/solrsearch/select?q=trisotech
+    result_count: 1
+    note: The single hit is the third-party org.kie artifact above.
+  - registry: nuget
+    endpoint: https://azuresearch-usnc.nuget.org/query?q=trisotech
+    result_count: 0
+    version: null
+  - registry: rubygems
+    endpoint: https://rubygems.org/api/v1/search.json?query=trisotech
+    result_count: 0
+    version: null
+  - registry: packagist
+    endpoint: https://packagist.org/search.json?q=trisotech
+    result_count: 0
+    version: null
+    note: Matches returned are for the unrelated vendor "triotechnology".
+  - registry: crates.io
+    endpoint: https://crates.io/api/v1/crates?q=trisotech
+    result_count: 0
+    version: null
+  - registry: pkg.go.dev
+    result_count: 0
+    version: null
+    note: No Trisotech module path is published.
+github_org:
+  login: Trisotech
+  url: https://github.com/Trisotech
+  public_repo_count: 3
+  repos:
+    - name: cmdl-service-test
+      url: https://github.com/Trisotech/cmdl-service-test
+      language: Java
+      description: >-
+        Sample code to execute external test cases in the Trisotech Automation Solutions.
+        Sample code, not a distributable package — it is not published to Maven Central.
+      last_push: '2026-02-10'
+      is_sdk: false
+    - name: OAGIS-BPMN-2.0-Validator
+      url: https://github.com/Trisotech/OAGIS-BPMN-2.0-Validator
+      language: HTML
+      description: Validates the BPMN 2.0 binding of messages, data objects and data stores to OAGIS BODs and nouns.
+      last_push: '2021-12-10'
+      is_sdk: false
+    - name: .github
+      description: Default community health files.
+      last_push: '2025-11-24'
+      is_sdk: false
+  related_but_not_owned:
+    - name: dmn-tck/tck
+      url: https://github.com/dmn-tck/tck
+      note: >-
+        Trisotech maintains the dmn-tck-runner-trisotech runner inside the community DMN TCK
+        repository. Referenced from the Test Endpoint documentation, but the repository
+        belongs to the DMN TCK project, not to Trisotech.
+documented_client_generation_path:
+  approach: generate-from-spec
+  note: >-
+    "These Open API files can also be used in API Gateways products such as: WSO2, Azure API
+    Management, Apigee, Amazon API Gateway and many more"; the docs point users at
+    https://editor.swagger.io to generate client libraries.
+  source: https://cloud.trisotech.com/help/service-library/openapi-endpoint.html
+finding: >-
+  A developer adopting Trisotech gets no maintained client in any language. Because the
+  generated OpenAPI is per-service and tenant-specific, the generated client is also
+  per-service — there is no stable, versioned library for the 129-operation Public API at
+  all. No `SDKs` pointer is wired in apis.yml, because there is no official SDK to point at.
+evidence:
+  - url: https://registry.npmjs.org/-/v1/search?text=trisotech
+    status: 200
+  - url: https://pypi.org/pypi/trisotech/json
+    status: 404
+  - url: https://api.github.com/orgs/Trisotech/repos
+    status: 200
+  - url: https://cloud.trisotech.com/help/service-library/openapi-endpoint.html
+    status: 200

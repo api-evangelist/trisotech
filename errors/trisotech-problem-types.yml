@@ -1,0 +1,191 @@
+generated: '2026-09-02'
+method: derived
+source: https://cloud.trisotech.com/help/des/system-integration/rest-api-documentation.html
+supporting_probe: https://cloud.trisotech.com/publicapi/user
+name: Trisotech Public API Error Catalog
+summary: >-
+  Derived from the response tables of all 129 operations in the provider's published API
+  reference, plus a live unauthenticated probe that returned a real error body. Trisotech
+  does not use RFC 9457 problem+json; it returns a proprietary envelope with an array of
+  error objects carrying separate machine and human messages.
+format: proprietary
+rfc9457: false
+media_type: application/json
+envelope:
+  shape: '{"error":[{"code":"<string>","systemMessage":"<string>","userMessage":"<string>"}]}'
+  schema_name: ErrorMessage
+  member_schema_name: ErrorMessageErrorInner
+  fields:
+    - name: code
+      description: Machine-readable error identifier. This is the field a client must branch on.
+    - name: systemMessage
+      description: Technical description intended for logs and developers.
+    - name: userMessage
+      description: Human-facing message intended for display to an end user.
+  note: >-
+    The envelope is an ARRAY of errors, so a single response can carry more than one.
+status_codes:
+  - code: 400
+    meaning: Invalid or missing parameters.
+    published_messages:
+      - Invalid parameters
+      - In case of missing or invalid parameters.
+      - Invalid or missing information required for migration.
+  - code: 401
+    meaning: Unauthorized.
+    published_messages:
+      - Unauthorized
+    note: >-
+      Declared on a small number of operations only. The observed default for a missing
+      bearer token is 500, not 401 — see the probed row below.
+  - code: 403
+    meaning: Forbidden — the token lacks the grant, or the caller lacks rights on the resource.
+    published_messages:
+      - An error occurred.
+  - code: 404
+    meaning: Model, file or resource not found in the given repository, or not accessible.
+    published_messages:
+      - Model not found or can't be accessed
+      - In case when model was not found in given repository.
+  - code: 500
+    meaning: >-
+      The catch-all. Used both for genuine server faults AND for authentication and
+      authorization failures, with the real condition carried in error[].code.
+    published_messages:
+      - An error occurred.
+      - Internal server error
+    datatype: ErrorMessage
+problem_types:
+  - code: RequiresLogin
+    http_status: 500
+    systemMessage: This service requires a User Login
+    userMessage: You should Login First
+    method: probed
+    source: GET https://cloud.trisotech.com/publicapi/user with no Authorization header, 2026-09-02
+    remediation: >-
+      Obtain a bearer token for a Client App via the OAuth 2 authorization code (or client
+      credentials) flow at https://{instance}.trisotech.com/oauth2/token and send it as
+      "Authorization: Bearer <token>".
+published_error_codes:
+  count: 27
+  method: searched
+  source: >-
+    The ErrorMessageErrorInner model in the published API reference declares `code` as a
+    closed enum. Transcribed verbatim from that enum; the meanings below are one-line
+    readings of each code name, not provider text — the provider publishes the code
+    names only.
+  codes:
+    - code: ProcessingException
+      meaning: Generic server-side processing failure.
+      agent_action: retry-with-backoff
+      meaning_method: derived
+    - code: RequiresLogin
+      meaning: No valid session or bearer token was presented.
+      agent_action: re-authenticate
+      meaning_method: derived
+    - code: Unlicensed
+      meaning: The instance or user is not licensed for the requested capability.
+      meaning_method: derived
+    - code: NoFile
+      meaning: The referenced file does not exist.
+      meaning_method: derived
+    - code: AlreadyAMember
+      meaning: The user is already a member of the group or place.
+      meaning_method: derived
+    - code: InvalidEmail
+      meaning: The supplied email address is not valid.
+      meaning_method: derived
+    - code: NoUser
+      meaning: The referenced user does not exist.
+      meaning_method: derived
+    - code: NoRepository
+      meaning: The referenced modeling place does not exist.
+      meaning_method: derived
+    - code: InvalidParameters
+      meaning: One or more request parameters are missing or malformed.
+      meaning_method: derived
+    - code: NoRight
+      meaning: The caller lacks the required right on the target resource.
+      meaning_method: derived
+    - code: RepositoryExists
+      meaning: A modeling place with that name already exists.
+      meaning_method: derived
+    - code: NoProduct
+      meaning: The requested product is not available on this instance.
+      meaning_method: derived
+    - code: InvalidRepository
+      meaning: The referenced modeling place is not valid for this operation.
+      meaning_method: derived
+    - code: InvalidMember
+      meaning: The referenced member is not valid.
+      meaning_method: derived
+    - code: NoSubscription
+      meaning: The required subscription (feature set) is not active.
+      meaning_method: derived
+    - code: InvalidPath
+      meaning: The supplied path is not valid.
+      meaning_method: derived
+    - code: DuplicateName
+      meaning: A resource with that name already exists.
+      meaning_method: derived
+    - code: InvalidFileName
+      meaning: The supplied file name is not valid.
+      meaning_method: derived
+    - code: InvalidMimeType
+      meaning: The supplied or detected MIME type is not accepted.
+      meaning_method: derived
+    - code: NoRequest
+      meaning: The referenced request does not exist.
+      meaning_method: derived
+    - code: NoService
+      meaning: The referenced service does not exist.
+      meaning_method: derived
+    - code: FileUploadError
+      meaning: The file upload failed.
+      agent_action: retry-with-backoff
+      meaning_method: derived
+    - code: InvalidSession
+      meaning: The session is no longer valid.
+      agent_action: re-authenticate
+      meaning_method: derived
+    - code: FeedbackError
+      meaning: Submitting feedback failed.
+      meaning_method: derived
+    - code: MailError
+      meaning: Sending mail failed.
+      agent_action: retry-with-backoff
+      meaning_method: derived
+    - code: PermissionException
+      meaning: The operation was refused on permission grounds.
+      meaning_method: derived
+    - code: SendMessageError
+      meaning: Publishing the message failed.
+      agent_action: retry-with-backoff
+      meaning_method: derived
+agent_findings:
+  - >-
+    HTTP status alone is NOT sufficient to classify a Trisotech API failure. An agent must
+    parse error[0].code; a 500 may mean "you are not logged in", which is retryable after
+    re-authentication, or a genuine server fault, which is not.
+  - >-
+    No Retry-After, RateLimit-* or X-RateLimit-* header was present on any observed
+    response, so an agent has no runtime backoff signal to read.
+  - >-
+    Every response carries a request-tracking-identifier header (a UUID) that should be
+    captured and quoted in any support request.
+coverage:
+  operations_examined: 129
+  operations_with_a_declared_error_response: 129
+  distinct_status_codes: [400, 401, 403, 404, 500]
+  note: >-
+    The 27 code values above are the provider's own closed enum on ErrorMessageErrorInner.
+    They are NOT mapped to HTTP status codes anywhere in the published reference, and only
+    RequiresLogin was observed on the wire. No code, and no code-to-status mapping, has been
+    invented to fill the catalog.
+evidence:
+  - url: https://cloud.trisotech.com/help/des/system-integration/rest-api-documentation.html
+    status: 200
+  - url: https://cloud.trisotech.com/publicapi/user
+    status: 500
+  - url: https://cloud.trisotech.com/publicapi/mimetype
+    status: 500

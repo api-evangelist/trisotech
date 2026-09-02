@@ -1,0 +1,49 @@
+generated: '2026-09-02'
+method: probed
+source: https://cloud.trisotech.com/publicapi/login
+docs: https://cloud.trisotech.com/help/des/system-integration/rest-api.html
+name: Trisotech Public API Rate Limits
+summary: >-
+  Trisotech publishes no rate limits for the Public API, and returns no rate-limit headers
+  on live responses. An agent integrating against this API has neither a documented budget
+  nor a runtime signal, and will discover any limit only by being refused.
+limit_count: 0
+documented: false
+rate_limits: []
+response_headers:
+  observed: []
+  probed: '2026-09-02'
+  probe_requests:
+    - request: GET https://cloud.trisotech.com/publicapi/login
+      status: 200
+      rate_limit_headers: none
+    - request: GET https://cloud.trisotech.com/publicapi/user
+      status: 500
+      rate_limit_headers: none
+  headers_present_but_unrelated:
+    - request-tracking-identifier
+    - strict-transport-security
+    - content-security-policy
+    - cache-control
+  note: >-
+    No RateLimit-Limit / RateLimit-Remaining / RateLimit-Reset (RFC 9239 draft style), no
+    X-RateLimit-* variant, and no Retry-After appeared on any observed response.
+status_on_exhaustion: null
+status_on_exhaustion_note: >-
+  Undocumented. Given that the API answers a missing bearer token with HTTP 500 rather than
+  401, a throttle response should not be assumed to be 429 without testing against a
+  licensed instance.
+backoff_guidance:
+  published: false
+  recommendation_for_agents: >-
+    Treat the API as unmetered-but-unknown: apply client-side concurrency limits, exponential
+    backoff on any 5xx, and read error[].code rather than the status code to decide whether a
+    retry is appropriate. Do NOT blind-retry POSTs — the API publishes no idempotency key
+    (see conventions/trisotech-conventions.yml).
+evidence:
+  - url: https://cloud.trisotech.com/publicapi/login
+    status: 200
+  - url: https://cloud.trisotech.com/publicapi/user
+    status: 500
+  - url: https://cloud.trisotech.com/help/des/system-integration/rest-api.html
+    status: 200

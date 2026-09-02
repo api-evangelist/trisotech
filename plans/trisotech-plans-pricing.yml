@@ -1,0 +1,58 @@
+generated: '2026-09-02'
+method: searched
+source: https://www.trisotech.com/pricing/
+name: Trisotech Pricing
+summary: >-
+  Trisotech publishes no price list. The page at /pricing/ is a "Request Pricing" lead form
+  — name, company, project and budget — answered by a sales representative. Product tiers
+  are named across the site (Digital Enterprise Suite, Digital Modeling Suite, Digital
+  Automation Suite, plus add-on feature sets) but no tier carries a published price, quota
+  or overage.
+plan_count: 0
+pricing_model: contact-sales
+self_serve_signup: false
+free_tier: false
+trial:
+  available: true
+  url: https://www.trisotech.com/trials/
+  http_status: 200
+  note: >-
+    Free trials are offered and onboarded through a form, not a self-serve signup; no trial
+    length, seat count or limit is published on the trials page.
+named_offerings_without_published_price:
+  - name: Digital Enterprise Suite
+    note: The umbrella product; modeling plus automation.
+  - name: Digital Modeling Suite
+    note: >-
+      Modelers (BPMN/DMN/CMMN and others). The Digital Enterprise Graph / SPARQL API is
+      called out in the docs as an "optional subscription" on top of this suite.
+  - name: Digital Automation Suite
+    note: Execution environments, Service Library, containers.
+  - name: Healthcare Feature Set
+    note: >-
+      Named in the docs as a required subscription for the CDS Hooks and SMART on FHIR
+      endpoints. A gate on API capability, priced privately.
+    source: https://cloud.trisotech.com/help/service-library/cds-hooks.html
+  - name: Digital Enterprise Graph
+    note: Required, with the graph_r grant, to use the SPARQL API.
+    source: https://cloud.trisotech.com/help/digital-modeling-suite/sparql.html
+licensing_units_observed:
+  units:
+    - Client Access Licenses (referenced in release notes and administration docs)
+    - User seats (UserSeatAssigned / UserSeatUnassigned event message types)
+  note: >-
+    These are the billing units the product actually models — they appear in the event
+    catalog and admin docs — but no unit price is published.
+quotas: []
+overage: null
+finding: >-
+  Because capability is gated by subscription (Healthcare Feature Set, Digital Enterprise
+  Graph) and no price or entitlement matrix is published, a buyer cannot determine from the
+  public site what an integration will cost or which API surfaces their licence includes.
+evidence:
+  - url: https://www.trisotech.com/pricing/
+    status: 200
+  - url: https://www.trisotech.com/trials/
+    status: 200
+  - url: https://cloud.trisotech.com/help/service-library/cds-hooks.html
+    status: 200
