@@ -14,8 +14,15 @@
       "title": "",
       "saved": 0,
       "method": "none"
+    },
+    {
+      "source": "https://www.trisotech.com/blog/index.xml",
+      "feed_url": "https://www.trisotech.com/blog/index.xml",
+      "title": "",
+      "saved": 0,
+      "method": "feed"
     }
   ],
-  "post_count": 0,
-  "fetched": "2026-09-06T19:17:18Z"
+  "post_count": 20,
+  "fetched": "2026-09-13T13:00:00Z"
 }
