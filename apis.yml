@@ -22,6 +22,21 @@ modified: '2026-09-02'
 tags:
 - Business Process Management
 - Decision Management
+- Workflow-Automation
+- Low-Code
+- BPMN
+- DMN
+- CMMN
+- Healthcare
+- FHIR
+- Clinical Decision Support
+- Standards
+- AI Agents
+- MCP
+- Enterprise Architecture
+tags_raw:
+- Business Process Management
+- Decision Management
 - Workflow Automation
 - Low Code
 - BPMN
@@ -47,6 +62,11 @@ apis:
   humanURL: https://cloud.trisotech.com/help/des/system-integration/rest-api-documentation.html
   baseURL: https://cloud.trisotech.com/publicapi
   tags:
+  - Business Process Management
+  - Decision Management
+  - Workflow-Automation
+  - Administration
+  tags_raw:
   - Business Process Management
   - Decision Management
   - Workflow Automation
@@ -83,6 +103,10 @@ apis:
   humanURL: https://cloud.trisotech.com/help/service-library/service-rest-api-endpoint.html
   baseURL: https://cloud.trisotech.com/execution
   tags:
+  - Workflow-Automation
+  - Decision Management
+  - Case Management
+  tags_raw:
   - Workflow Automation
   - Decision Management
   - Case Management
