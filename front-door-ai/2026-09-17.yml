@@ -1,0 +1,27 @@
+# Front Door AI Index — trisotech — 2026-09-17
+# AI vocabulary counted on the provider's root page. Generated; do not edit.
+# `score` is null unless ownership is `own` — see front_door_ai.py.
+front_door_ai:
+  slug: trisotech
+  lexicon_version: '1.0'
+  probed_at: '2026-09-17'
+  host: www.trisotech.com
+  final_host: www.trisotech.com
+  ownership: own
+  owner: trisotech
+  shares_host_with: null
+  inherited_from: null
+  verdict: scored
+  score: 32
+  host_score: 32
+  density: 25.66
+  words: 1247
+  tiers:
+    agentic: 0
+    core: 32
+    model: 0
+  ambiguous: 14
+  top_terms:
+    AI: 32
+    automation: 13
+    smart: 1
