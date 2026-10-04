@@ -22,7 +22,7 @@ modified: '2026-09-02'
 tags:
 - Business Process Management
 - Decision Management
-- Workflow-Automation
+- Workflow Automation
 - Low-Code
 - BPMN
 - DMN
@@ -49,6 +49,7 @@ tags_raw:
 - AI Agents
 - Model Context Protocol
 - Enterprise Architecture
+- Workflow-Automation
 apis:
 - aid: trisotech:public-api
   name: Trisotech Digital Enterprise Suite Public API
@@ -64,13 +65,14 @@ apis:
   tags:
   - Business Process Management
   - Decision Management
-  - Workflow-Automation
+  - Workflow Automation
   - Administration
   tags_raw:
   - Business Process Management
   - Decision Management
   - Workflow Automation
   - Administration
+  - Workflow-Automation
   properties:
   - type: Documentation
     url: https://cloud.trisotech.com/help/des/system-integration/rest-api.html
@@ -103,13 +105,14 @@ apis:
   humanURL: https://cloud.trisotech.com/help/service-library/service-rest-api-endpoint.html
   baseURL: https://cloud.trisotech.com/execution
   tags:
-  - Workflow-Automation
+  - Workflow Automation
   - Decision Management
   - Case Management
   tags_raw:
   - Workflow Automation
   - Decision Management
   - Case Management
+  - Workflow-Automation
   properties:
   - type: Documentation
     url: https://cloud.trisotech.com/help/service-library/endpoints.html
