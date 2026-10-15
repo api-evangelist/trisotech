@@ -1,7 +1,10 @@
 generated: '2026-10-13'
 method: searched
 checked:
+- https://aggateway.org/AboutUs/Members.aspx
+- https://agrirouter.com/en/solutions
 - https://azuremarketplace.microsoft.com/
+- https://climate.com/en-us/partners.html
 marketplace_apps: []
 edges:
 - partner_name: Microsoft Azure Marketplace
@@ -19,3 +22,29 @@ edges:
   seller_name: Trisotech
   detected_by: sweep-cloud-marketplaces.py
   detected: '2026-10-13'
+- partner_name: AgGateway (ADAPT / AgGateway standards)
+  partner: null
+  partner_match: register
+  type: register
+  direction: partner-built
+  evidence: https://aggateway.org/AboutUs/Members.aspx
+  category: farm data standards
+  channel: standard-directory
+  relationship: standard-participant
+  contract_reference:
+    register: AgGateway member list (aggateway.org/AboutUs/Members.aspx)
+    spec_file: null
+    standard: AgGateway (ADAPT, ISOXML/SPADE/PAIL, CIDX)
+    role: aggateway-member
+    registered_name: Trisotech
+    website: http://www.trisotech.com/
+    matched_domain: trisotech.com
+    matched_by: domain
+    signal_note: 'participation only: membership is not conformance'
+    detected_by: sweep-agriculture-food.py
+    detected: '2026-10-15'
+  detected_by: sweep-agriculture-food.py
+  first_seen: '2026-10-15'
+source:
+- https://aggateway.org/AboutUs/Members.aspx
+- https://agrirouter.com/en/solutions
