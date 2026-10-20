@@ -5,6 +5,7 @@ checked:
 - https://agrirouter.com/en/solutions
 - https://azuremarketplace.microsoft.com/
 - https://climate.com/en-us/partners.html
+- https://www.aef-online.org/membership/memberlist.html
 marketplace_apps: []
 edges:
 - partner_name: Microsoft Azure Marketplace
@@ -42,7 +43,7 @@ edges:
     matched_by: domain
     signal_note: 'participation only: membership is not conformance'
     detected_by: sweep-agriculture-food.py
-    detected: '2026-10-15'
+    detected: '2026-10-19'
   detected_by: sweep-agriculture-food.py
   first_seen: '2026-10-15'
 source:

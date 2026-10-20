@@ -15,3 +15,26 @@
   relationship: distribution-channel
   status: not-a-workflow
   arazzo: null
+- slug: trisotech-aggateway-adapt-aggateway-standards
+  label: AgGateway (ADAPT / AgGateway standards)
+  partner_name: AgGateway (ADAPT / AgGateway standards)
+  category: farm data standards
+  type: register
+  channel: standard-directory
+  evidence: https://aggateway.org/AboutUs/Members.aspx
+  source: edge
+  relationship: standard-participant
+  contract_reference:
+    register: AgGateway member list (aggateway.org/AboutUs/Members.aspx)
+    spec_file: null
+    standard: AgGateway (ADAPT, ISOXML/SPADE/PAIL, CIDX)
+    role: aggateway-member
+    registered_name: Trisotech
+    website: http://www.trisotech.com/
+    matched_domain: trisotech.com
+    matched_by: domain
+    signal_note: 'participation only: membership is not conformance'
+    detected_by: sweep-agriculture-food.py
+    detected: '2026-10-19'
+  status: not-a-workflow
+  arazzo: null
